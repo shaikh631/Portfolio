@@ -158,6 +158,7 @@ export default function Hero() {
 
   return (
     <section
+      id="top"
       ref={sectionRef}
       onPointerMove={onMove}
       onPointerLeave={() => mx.set(0)}
@@ -177,7 +178,7 @@ export default function Hero() {
       <div className="h-20 shrink-0" aria-hidden="true" />
 
       {/* name on the left; disc (back) and 3D object (front) on the right side, sharing one center */}
-      <div id="top" className="relative flex flex-1 items-center justify-start px-6 md:px-14">
+      <div className="relative flex flex-1 items-center justify-start px-6 md:px-14">
         <StageLayer y={stageY} z="z-0">
           <motion.div
             aria-hidden="true"
