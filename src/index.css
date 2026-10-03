@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@theme {
+  --font-display: "Anton", Impact, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --color-espresso: #1b120d;
+  --color-roast: #2b1c13;
+  --color-cocoa: #3a261a;
+  --color-bark: #4a3223;
+  --color-caramel: #a8734a;
+  --color-cream: #eee4d0;
+}
