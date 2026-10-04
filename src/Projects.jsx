@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 const EASE = [0.16, 1, 0.3, 1];
+const MASK = { hidden: { y: "105%" }, show: { y: 0, transition: { duration: 1.1, ease: EASE } } };
 
 /* ---------- small illustrations (swap for real screenshots when you have them) ---------- */
 
@@ -51,22 +52,22 @@ function FraudVisual() {
   return (
     <div className="flex h-full w-full flex-col justify-center gap-8 p-10">
       {rows.map((r, i) => (
-        <div key={r.who}>
+        <motion.div key={r.who} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-20%" }}>
           <div className="flex items-baseline justify-between font-serif text-lg">
             <span>{r.who}</span>
-            <span className={r.flag ? "text-caramel" : "text-cream/60"}>{r.note}</span>
+            <span className={r.flag ? "text-gold" : "text-cream/60"}>{r.note}</span>
           </div>
           <div className="mt-3 h-1 bg-cream/15">
             <motion.div
-              className={`h-full origin-left ${r.flag ? "bg-caramel" : "bg-cream/70"}`}
+              className={`h-full origin-left ${r.flag ? "bg-gold" : "bg-cream/70"}`}
               style={{ width: `${r.risk}%` }}
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true, margin: "-20%" }}
-              transition={{ duration: 1.2, delay: 0.2 + i * 0.15, ease: EASE }}
+              variants={{
+                hidden: { scaleX: 0 },
+                show: { scaleX: 1, transition: { duration: 1.2, delay: 0.2 + i * 0.15, ease: EASE } },
+              }}
             />
           </div>
-        </div>
+        </motion.div>
       ))}
     </div>
   );
@@ -149,7 +150,7 @@ function Card({ p, index, total, progress }) {
       >
         <div className="flex flex-col justify-between p-8 md:p-14">
           <div>
-            <p className="font-serif text-xl italic text-caramel">{p.kind}</p>
+            <p className="font-serif text-xl italic text-gold">{p.kind}</p>
             <h3 className="mt-4 font-display text-[clamp(2.75rem,6vw,6rem)] leading-[0.95]">{p.title}</h3>
             <p className="mt-6 max-w-md font-serif text-lg leading-relaxed text-cream/75">{p.blurb}</p>
           </div>
@@ -169,7 +170,7 @@ function Card({ p, index, total, progress }) {
                   href={l.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="group inline-flex items-center gap-2 border-b border-cream/40 pb-1 font-serif text-lg transition-colors hover:border-caramel hover:text-caramel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
+                  className="group inline-flex items-center gap-2 border-b border-cream/40 pb-1 font-serif text-lg transition-colors hover:border-gold hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
                 >
                   {l.label}
                   <svg
@@ -214,17 +215,16 @@ export default function Projects() {
   return (
     <section id="projects" className="bg-cream text-espresso">
       <div className="px-6 pb-16 pt-28 md:px-14 md:pb-24 md:pt-40">
-        <h2 className="overflow-hidden pb-2 font-display text-[clamp(4rem,13vw,13rem)] leading-none">
-          <motion.span
-            className="block"
-            initial={reduce ? false : { y: "105%" }}
-            whileInView={{ y: 0 }}
-            viewport={{ once: true, margin: "-10%" }}
-            transition={{ duration: 1.1, ease: EASE }}
-          >
+        <motion.h2
+          initial={reduce ? false : "hidden"}
+          whileInView="show"
+          viewport={{ once: true, margin: "-10%" }}
+          className="overflow-hidden pb-2 font-display text-[clamp(4rem,13vw,13rem)] leading-none"
+        >
+          <motion.span className="block" variants={MASK}>
             Selected work
           </motion.span>
-        </h2>
+        </motion.h2>
         <p className="mt-6 max-w-md font-serif text-xl leading-relaxed text-bark">
           Three full-stack projects, each with its code on GitHub.
         </p>

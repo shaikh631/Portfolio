@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 
 const EASE = [0.16, 1, 0.3, 1];
+const MASK = { hidden: { y: "105%" }, show: { y: 0, transition: { duration: 1.1, ease: EASE } } };
 
 /* Edit this paragraph, the scroll effect adapts to any length. */
 const TEXT =
@@ -64,17 +65,16 @@ export default function About() {
     <section id="about" className="bg-cream text-espresso">
       <div className="grid gap-10 px-6 py-32 md:grid-cols-[1fr_2.2fr] md:gap-16 md:px-14 md:py-48">
         <div className="self-start md:sticky md:top-32">
-          <h2 className="overflow-hidden pb-2 font-display text-[clamp(4rem,9vw,9rem)] leading-none">
-            <motion.span
-              className="block"
-              initial={reduce ? false : { y: "105%" }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true, margin: "-10%" }}
-              transition={{ duration: 1.1, ease: EASE }}
-            >
+          <motion.h2
+            initial={reduce ? false : "hidden"}
+            whileInView="show"
+            viewport={{ once: true, margin: "-10%" }}
+            className="overflow-hidden pb-2 font-display text-[clamp(4rem,9vw,9rem)] leading-none"
+          >
+            <motion.span className="block" variants={MASK}>
               About
             </motion.span>
-          </h2>
+          </motion.h2>
         </div>
 
         <div>
@@ -85,9 +85,7 @@ export default function About() {
           >
             {reduce
               ? TEXT
-              : WORDS.map((w, i) => (
-                  <Word key={i} word={w} index={i} progress={scrollYProgress} />
-                ))}
+              : WORDS.map((w, i) => <Word key={i} word={w} index={i} progress={scrollYProgress} />)}
           </p>
 
           <dl className="mt-20 grid grid-cols-3 gap-6 border-t border-espresso/20 pt-8">

@@ -10,16 +10,19 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { Link } from "react-router-dom";
 
 /* ---------- edit these ---------- */
 const NAME = "AYAN";
 const RESUME = "/Ayan_Shaikh_Resume.pdf"; // file lives in your project's public/ folder
 
-const CREAM = "#eee4d0";
-const CARAMEL = "#c98f5c";
-const CORE = "#3a261a";
+const CREAM = "#f2eada";
+const GOLD = "#d9bc8c";
+const BRONZE = "#b88a5a";
+const CORE = "#2a1d14";
 const EASE = [0.16, 1, 0.3, 1];
+
+// Intro delay so the hero animates in as the loader's doors open. Set to 0 if you remove the loader.
+const T0 = 0.5;
 
 /* ---------- 3D scene ---------- */
 
@@ -40,7 +43,7 @@ function Ring({ radius, tilt, speed, satellite = 0.09 }) {
         </mesh>
         <mesh position={[radius, 0, 0]}>
           <sphereGeometry args={[satellite, 32, 32]} />
-          <meshStandardMaterial color={CARAMEL} roughness={0.35} metalness={0.2} />
+          <meshStandardMaterial color={GOLD} roughness={0.3} metalness={0.35} />
         </mesh>
       </group>
     </group>
@@ -61,7 +64,7 @@ function Armillary() {
   useFrame((state, dt) => {
     // intro: grow into place inside the scene. Do not scale the canvas wrapper in CSS,
     // because R3F measures its size once on mount and would keep the smaller size.
-    const p = reduce ? 1 : THREE.MathUtils.clamp((state.clock.elapsedTime - 0.4) / 1.6, 0, 1);
+    const p = reduce ? 1 : THREE.MathUtils.clamp((state.clock.elapsedTime - (T0 + 0.4)) / 1.6, 0, 1);
     tilt.current.scale.setScalar(0.7 + 0.3 * (1 - Math.pow(1 - p, 4)));
 
     const { pointer } = state;
@@ -90,7 +93,7 @@ function Armillary() {
 
         <mesh ref={shell}>
           <icosahedronGeometry args={[1.6, 2]} />
-          <meshBasicMaterial wireframe color={CARAMEL} transparent opacity={0.28} />
+          <meshBasicMaterial wireframe color={GOLD} transparent opacity={0.3} />
         </mesh>
 
         <Ring radius={1.85} tilt={[1.25, 0.2, 0]} speed={0.45} />
@@ -111,9 +114,9 @@ function Scene({ eventSource }) {
       eventPrefix="client"
       aria-hidden="true"
     >
-      <ambientLight intensity={0.55} color="#f3e6cf" />
-      <directionalLight position={[4, 5, 5]} intensity={2.6} color="#fff1d6" />
-      <pointLight position={[-5, -3, 2]} intensity={40} color={CARAMEL} />
+      <ambientLight intensity={0.55} color="#f6ecd9" />
+      <directionalLight position={[4, 5, 5]} intensity={2.6} color="#fff4de" />
+      <pointLight position={[-5, -3, 2]} intensity={40} color={BRONZE} />
       <Armillary />
       <Sparkles count={40} scale={[9, 9, 4]} size={2.2} speed={0.3} color={CREAM} opacity={0.55} />
     </Canvas>
@@ -158,11 +161,10 @@ export default function Hero() {
 
   return (
     <section
-      id="top"
       ref={sectionRef}
       onPointerMove={onMove}
       onPointerLeave={() => mx.set(0)}
-      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-[linear-gradient(180deg,var(--color-espresso)_0%,var(--color-roast)_100%)] text-cream"
+      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-[radial-gradient(90%_70%_at_72%_42%,var(--color-roast),var(--color-espresso)_72%)] text-cream"
     >
       {/* film grain */}
       <div
@@ -178,16 +180,16 @@ export default function Hero() {
       <div className="h-20 shrink-0" aria-hidden="true" />
 
       {/* name on the left; disc (back) and 3D object (front) on the right side, sharing one center */}
-      <div className="relative flex flex-1 items-center justify-start px-6 md:px-14">
+      <div id="top" className="relative flex flex-1 items-center justify-start px-6 md:px-14">
         <StageLayer y={stageY} z="z-0">
           <motion.div
             aria-hidden="true"
             initial={reduce ? false : { scale: 0.4, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1.5, delay: 0.25, ease: EASE }}
-            className="absolute inset-[14%] rounded-full bg-caramel"
+            transition={{ duration: 1.5, delay: T0 + 0.25, ease: EASE }}
+            className="absolute inset-[14%] rounded-full bg-[radial-gradient(circle_at_32%_26%,var(--color-gold),var(--color-caramel)_46%,#7a5836_100%)] shadow-[0_50px_140px_-40px_rgba(0,0,0,0.7)]"
           />
-          <div aria-hidden="true" className="absolute inset-[2%] rounded-full border border-cream/15" />
+          <div aria-hidden="true" className="absolute inset-[2%] rounded-full border border-gold/20" />
         </StageLayer>
 
         <motion.h1
@@ -201,7 +203,7 @@ export default function Hero() {
                 className="inline-block"
                 initial={reduce ? false : { y: "105%" }}
                 animate={{ y: 0 }}
-                transition={{ duration: 1.1, delay: 0.1 + i * 0.09, ease: EASE }}
+                transition={{ duration: 1.1, delay: T0 + 0.1 + i * 0.09, ease: EASE }}
               >
                 {ch}
               </motion.span>
@@ -213,7 +215,7 @@ export default function Hero() {
           <motion.div
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.4, delay: 0.55, ease: EASE }}
+            transition={{ duration: 1.4, delay: T0 + 0.55, ease: EASE }}
             className="absolute inset-0"
           >
             <Scene eventSource={sectionRef} />
@@ -225,7 +227,7 @@ export default function Hero() {
       <motion.div
         initial={reduce ? false : { opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.9, ease: EASE }}
+        transition={{ duration: 1, delay: T0 + 0.9, ease: EASE }}
         className="relative z-30 flex flex-col gap-6 px-6 pb-8 pt-4 md:flex-row md:items-end md:justify-between md:px-14"
       >
         <div>
@@ -241,9 +243,9 @@ export default function Hero() {
         </div>
 
         <div className="flex flex-wrap items-center gap-4">
-        <Link
-          to="/projects"
-          className="group inline-flex w-fit items-center gap-6 bg-cream px-7 py-4 font-serif text-lg text-espresso transition-colors [clip-path:polygon(0_0,calc(100%-14px)_0,100%_14px,100%_100%,0_100%)] hover:bg-caramel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
+        <a
+          href="#projects"
+          className="group inline-flex w-fit items-center gap-6 bg-cream px-7 py-4 font-serif text-lg text-espresso transition-colors [clip-path:polygon(0_0,calc(100%-14px)_0,100%_14px,100%_100%,0_100%)] hover:bg-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
         >
           See my projects
           <svg
@@ -258,7 +260,7 @@ export default function Hero() {
           >
             <path d="M3 3 15 15M15 6v9H6" />
           </svg>
-        </Link>
+        </a>
 
         <a
           href={RESUME}

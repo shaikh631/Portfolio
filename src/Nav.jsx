@@ -1,13 +1,13 @@
 import { motion, useScroll, useSpring } from "framer-motion";
-import { Link } from "react-router-dom";
 
 const EMAIL = "mailto:ayan.codes9819@gmail.com";
 const RESUME = "/Ayan_Shaikh_Resume.pdf"; // file lives in your project's public/ folder
 const NAV = [
-  { label: "Projects", href: "/projects" },
-  { label: "Skills", href: "/skills" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Projects", href: "#projects" },
+  { label: "Skills", href: "#skills" },
+  { label: "About", href: "#about" },
+  { label: "Journey", href: "#journey" },
+  { label: "Contact", href: "#contact" },
 ];
 
 /* The header uses mix-blend-difference, so cream text turns dark over the
@@ -21,12 +21,12 @@ export default function Nav() {
       <motion.div
         aria-hidden="true"
         style={{ scaleX: progress }}
-        className="fixed left-0 top-0 z-[60] h-[2px] w-full origin-left bg-caramel"
+        className="fixed left-0 top-0 z-[60] h-[2px] w-full origin-left bg-gold"
       />
 
       <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-5 text-cream mix-blend-difference md:px-14">
-        <Link
-          to="/"
+        <a
+          href="#top"
           className="flex items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
         >
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -37,18 +37,18 @@ export default function Nav() {
             <span className="block font-display text-2xl tracking-wide">Ayan Shaikh</span>
             <span className="mt-1 block font-serif text-sm opacity-70">Full-stack developer</span>
           </span>
-        </Link>
+        </a>
 
         <nav aria-label="Primary" className="hidden gap-10 md:absolute md:left-1/2 md:flex md:-translate-x-1/2">
           {NAV.map((n) => (
-            <Link
+            <a
               key={n.href}
-              to={n.href}
+              href={n.href}
               className="group relative font-serif text-lg opacity-80 transition-opacity hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
             >
               {n.label}
               <span className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100" />
-            </Link>
+            </a>
           ))}
         </nav>
 

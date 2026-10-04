@@ -1,65 +1,51 @@
-import { useEffect, useRef } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import Lenis from "lenis";
-import Nav from "./Nav.jsx";
-import Hero from "./Hero.jsx";
-import Projects from "./Projects.jsx";
-import Skills from "./Skills.jsx";
-import About from "./About.jsx";
-import Contact from "./Contact.jsx";
+import Preloader from "./Preloader";
+import Nav from "./Nav";
+import SideDots from "./SideDots";
+import Hero from "./Hero";
+import Marquee from "./Marquee";
+import Services from "./Services";
+import Projects from "./Projects";
+import Skills from "./Skills";
+import About from "./About";
+import Journey from "./Journey";
+import Contact from "./Contact";
 
-const SECTION_ROUTES = {
-  "/": "top",
-  "/projects": "projects",
-  "/skills": "skills",
-  "/about": "about",
-  "/contact": "contact",
-};
+export default function App() {
+  // Skip the loading screen for people who prefer reduced motion.
+  const [loading, setLoading] = useState(
+    () => !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+  const done = useCallback(() => setLoading(false), []);
 
-function PortfolioPage() {
-  const location = useLocation();
-  const lenisRef = useRef(null);
-
+  // Smooth scrolling. Skip this effect if your project already starts Lenis somewhere else.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const lenis = new Lenis({ autoRaf: true, anchors: true });
-    lenisRef.current = lenis;
-    return () => {
-      lenis.destroy();
-      lenisRef.current = null;
-    };
+    return () => lenis.destroy();
   }, []);
 
-  useEffect(() => {
-    const sectionId = SECTION_ROUTES[location.pathname] ?? "top";
-    const target = document.getElementById(sectionId);
-    if (!target) return;
-
-    if (lenisRef.current) {
-      lenisRef.current.scrollTo(target, { immediate: location.key === "default" });
-    }
-    else target.scrollIntoView({ behavior: "auto" });
-  }, [location.key, location.pathname]);
-
   return (
-    <main className="bg-espresso font-serif text-cream">
-      <Nav />
-      <Hero />
-      <Projects />
-      <Skills />
-      <About />
-      <Contact />
-    </main>
-  );
-}
+    <>
+      <AnimatePresence>{loading && <Preloader key="preloader" onDone={done} />}</AnimatePresence>
 
-export default function App() {
-  return (
-    <Routes>
-      {Object.keys(SECTION_ROUTES).map((path) => (
-        <Route key={path} path={path} element={<PortfolioPage />} />
-      ))}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      {/* Everything mounts when the loader finishes, so the hero's intro plays as the curtain lifts. */}
+      {!loading && (
+        <main className="bg-espresso font-serif text-cream">
+          <Nav />
+          <SideDots />
+          <Hero />
+          <Marquee />
+          <Services />
+          <Projects />
+          <Skills />
+          <About />
+          <Journey />
+          <Contact />
+        </main>
+      )}
+    </>
   );
 }

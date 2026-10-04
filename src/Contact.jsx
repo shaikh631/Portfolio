@@ -1,13 +1,5 @@
 import { useRef } from "react";
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import { Link } from "react-router-dom";
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 
 const EASE = [0.16, 1, 0.3, 1];
 const EMAIL_ADDRESS = "ayan.codes9819@gmail.com";
@@ -20,15 +12,18 @@ const LINKS = [
 ];
 
 function Letters({ text }) {
-  const reduce = useReducedMotion();
   return text.split("").map((ch, i) => (
-    <span key={i} aria-hidden="true" className="inline-block overflow-hidden whitespace-pre pb-[0.04em] align-bottom">
+    <span
+      key={i}
+      aria-hidden="true"
+      className="inline-block overflow-hidden whitespace-pre pb-[0.04em] align-bottom"
+    >
       <motion.span
         className="inline-block"
-        initial={reduce ? false : { y: "105%" }}
-        whileInView={{ y: 0 }}
-        viewport={{ once: true, margin: "-15%" }}
-        transition={{ duration: 1, delay: i * 0.05, ease: EASE }}
+        variants={{
+          hidden: { y: "105%" },
+          show: { y: 0, transition: { duration: 1, delay: i * 0.05, ease: EASE } },
+        }}
       >
         {ch}
       </motion.span>
@@ -71,6 +66,7 @@ function Magnetic({ children, strength = 0.35 }) {
 
 export default function Contact() {
   const ref = useRef(null);
+  const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
   const marqueeX = useTransform(scrollYProgress, [0, 1], ["0%", "-35%"]);
 
@@ -86,7 +82,7 @@ export default function Contact() {
           style={{
             x: marqueeX,
             color: "transparent",
-            WebkitTextStroke: "1px rgba(238,228,208,0.35)",
+            WebkitTextStroke: "1px rgba(242,234,218,0.35)",
           }}
           className="flex w-max gap-12 whitespace-nowrap font-display text-[clamp(5rem,14vw,13rem)] leading-none"
         >
@@ -97,9 +93,15 @@ export default function Contact() {
       </div>
 
       <div className="px-6 py-16 md:px-14">
-        <h2 aria-label="Let's talk" className="font-display text-[clamp(4.5rem,16vw,16rem)] leading-[0.9]">
+        <motion.h2
+          aria-label="Let's talk"
+          initial={reduce ? false : "hidden"}
+          whileInView="show"
+          viewport={{ once: true, margin: "-15%" }}
+          className="font-display text-[clamp(4.5rem,16vw,16rem)] leading-[0.9]"
+        >
           <Letters text="LET'S TALK" />
-        </h2>
+        </motion.h2>
 
         <div className="mt-12 flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
           <div>
@@ -108,7 +110,7 @@ export default function Contact() {
             </p>
             <a
               href={`mailto:${EMAIL_ADDRESS}`}
-              className="mt-6 inline-block border-b border-cream/40 pb-1 font-serif text-xl transition-colors hover:border-caramel hover:text-caramel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream md:text-2xl"
+              className="mt-6 inline-block border-b border-cream/40 pb-1 font-serif text-xl transition-colors hover:border-gold hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream md:text-2xl"
             >
               {EMAIL_ADDRESS}
             </a>
@@ -134,7 +136,7 @@ export default function Contact() {
                 {...(l.download
                   ? { download: "Ayan_Shaikh_Resume.pdf" }
                   : { target: "_blank", rel: "noreferrer" })}
-                className="group flex items-center justify-between border-t border-cream/15 py-5 font-serif text-3xl transition-all duration-300 hover:pl-4 hover:text-caramel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
+                className="group flex items-center justify-between border-t border-cream/15 py-5 font-serif text-3xl transition-all duration-300 hover:pl-4 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
               >
                 {l.label}
                 <svg
@@ -156,9 +158,12 @@ export default function Contact() {
 
         <footer className="mx-6 flex items-center justify-between border-t border-cream/15 py-6 font-serif text-base text-cream/60 md:mx-14">
           <span>© {new Date().getFullYear()} Mohammed Ayan Hafiz Shaikh</span>
-          <Link to="/" className="transition-colors hover:text-cream focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream">
+          <a
+            href="#top"
+            className="transition-colors hover:text-cream focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
+          >
             Back to top
-          </Link>
+          </a>
         </footer>
       </div>
     </section>
